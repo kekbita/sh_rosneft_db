@@ -2,9 +2,7 @@
 import sqlite3
 from textwrap import indent
 
-def reg_name(message):
-	city = message.text
-	user_id = message.from_user.id 
+def save_user_city(user_id,city):
 	con = sqlite3.connect("weatherusers.db")
 	cur  = con.cursor()
 	conn = sqlite3.connect('cities.db')
@@ -16,7 +14,6 @@ def reg_name(message):
 		return False
 	else:
 		cur.execute('insert into weatherusers values (?,?)', (user_id, city_from_db[0]))
-
 	con.commit()
 	con.close()
 
@@ -41,6 +38,18 @@ def get_all_users():
 
 	user_ids = cur.fetchall()
 	return list(x[0] for x in user_ids)
-print(get_all_users())
+
+def get_user_city(user_id):
+	con = sqlite3.connect("weatherusers.db")
+	cur  = con.cursor()
+	conn = sqlite3.connect('cities.db')
+	curr  = conn.cursor()
+	cur.execute('''select * from weatherusers where user_id = :user_id''', {'user_id': user_id})
+	city_id = cur.fetchone()[1]
+	curr.execute('''select * from cities where city_id = :city_id''', {'city_id':city_id})
+	city = curr.fetchone()[1]
+	return city
+
+
 
 
