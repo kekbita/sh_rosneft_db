@@ -12,13 +12,29 @@ def save_user_city(user_id,city):
 	city_from_db = curr.fetchone()
 	if city_from_db == None:
 		return False
+	# else:
+	# 	cur.execute('insert into weatherusers values (?,?)', (user_id, city_from_db[0]))
+	# 	con.commit()
+	# 	con.close()
+	# 	return True
+	# con = sqlite3.connect("weatherusers.db")
+	# cur  = con.cursor()
+	# conn = sqlite3.connect('cities.db')
+	# curr  = conn.cursor()
+	cur.execute('''select user_id from weatherusers''')
+
+	user_ids = cur.fetchall()
+	if user_id in (x[0] for x in user_ids): 
+		cur.execute('''update weatherusers set city_id = :city_id where user_id = :user_id''', {'city_id':city_from_db[0]})
 	else:
 		cur.execute('insert into weatherusers values (?,?)', (user_id, city_from_db[0]))
 	con.commit()
 	con.close()
+	return True
+	
 
 
-def get_user_lat_lon(user_id):
+def get_user_lon_lat(user_id):
 	con = sqlite3.connect("weatherusers.db")
 	cur  = con.cursor()
 	conn = sqlite3.connect('cities.db')
