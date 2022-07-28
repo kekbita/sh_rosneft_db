@@ -25,7 +25,7 @@ def save_user_city(user_id,city):
 
 	user_ids = cur.fetchall()
 	if user_id in (x[0] for x in user_ids): 
-		cur.execute('''update weatherusers set city_id = :city_id where user_id = :user_id''', {'city_id':city_from_db[0]})
+		cur.execute('''update weatherusers set city_id = :city_id where user_id = :user_id''', {'city_id':city_from_db[0]}, {'user_id':user_id})
 	else:
 		cur.execute('insert into weatherusers values (?,?)', (user_id, city_from_db[0]))
 	con.commit()
